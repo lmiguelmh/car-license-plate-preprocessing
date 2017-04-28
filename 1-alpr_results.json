@@ -1,0 +1,121 @@
+{
+  "data_type": "alpr_results",
+  "epoch_time": 1492266740000,
+  "img_height": 480,
+  "img_width": 640,
+  "processing_time_ms": 46.514999,
+  "regions_of_interest": [],
+  "results": [
+    {
+      "candidates": [
+        {
+          "confidence": 89.400139,
+          "matches_template": 0,
+          "plate": "ZG8481L"
+        },
+        {
+          "confidence": 87.216301,
+          "matches_template": 0,
+          "plate": "Z68481L"
+        },
+        {
+          "confidence": 83.263939,
+          "matches_template": 0,
+          "plate": "ZB8481L"
+        },
+        {
+          "confidence": 83.029732,
+          "matches_template": 0,
+          "plate": "ZG881L"
+        },
+        {
+          "confidence": 81.925011,
+          "matches_template": 0,
+          "plate": "ZG8A81L"
+        }
+      ],
+      "confidence": 89.400139,
+      "coordinates": [
+        {
+          "x": 152,
+          "y": 298
+        },
+        {
+          "x": 306,
+          "y": 306
+        },
+        {
+          "x": 305,
+          "y": 338
+        },
+        {
+          "x": 151,
+          "y": 330
+        }
+      ],
+      "matches_template": 0,
+      "plate": "ZG8481L",
+      "plate_index": 0,
+      "processing_time_ms": 11.03,
+      "region": "wa",
+      "region_confidence": 0,
+      "requested_topn": 5
+    },
+    {
+      "candidates": [
+        {
+          "confidence": 80.990799,
+          "matches_template": 0,
+          "plate": "3873362"
+        },
+        {
+          "confidence": 79.197723,
+          "matches_template": 0,
+          "plate": "387362"
+        },
+        {
+          "confidence": 79.184296,
+          "matches_template": 0,
+          "plate": "387332"
+        },
+        {
+          "confidence": 77.39122,
+          "matches_template": 0,
+          "plate": "38732"
+        },
+        {
+          "confidence": 74.56678,
+          "matches_template": 0,
+          "plate": "873362"
+        }
+      ],
+      "confidence": 80.990799,
+      "coordinates": [
+        {
+          "x": 344,
+          "y": 397
+        },
+        {
+          "x": 509,
+          "y": 390
+        },
+        {
+          "x": 512,
+          "y": 433
+        },
+        {
+          "x": 344,
+          "y": 440
+        }
+      ],
+      "matches_template": 0,
+      "plate": "3873362",
+      "plate_index": 1,
+      "processing_time_ms": 12.793,
+      "region": "wa",
+      "region_confidence": 0,
+      "requested_topn": 5
+    }
+  ],
+  "version": 2
+}
