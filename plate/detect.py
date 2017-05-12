@@ -27,30 +27,38 @@ from openalpr import Alpr
 alpr_home = 'c:\\OpenALPR\\openalpr_64\\'
 eu_alpr = Alpr('eu', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
 us_alpr = Alpr('us', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
-
-
-# TODO: use other countries
-# au_alpr = Alpr('au', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
-# gb_alpr = Alpr('gb', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
-# kr_alpr = Alpr('kr', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
-# mx_alpr = Alpr('mx', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
-# sg_alpr = Alpr('sg', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
+au_alpr = Alpr('au', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
+gb_alpr = Alpr('gb', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
+kr_alpr = Alpr('kr', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
+mx_alpr = Alpr('mx', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
+sg_alpr = Alpr('sg', alpr_home + 'openalpr.conf', alpr_home + 'runtime_data')
 
 
 def alpr_plate_detection(plate_path, country='eu', top_n=5, default_region='wa', detect_region=False):
     # Invalid pattern provided: wa
     # Valid patterns are located in the eu.patterns file
+    alpr = None
     if country == 'eu':
         alpr = eu_alpr
-    else:
+    elif country == 'us':
         alpr = us_alpr
+    elif country == 'au':
+        alpr = au_alpr
+    elif country == 'gb':
+        alpr = gb_alpr
+    elif country == 'kr':
+        alpr = kr_alpr
+    elif country == 'mx':
+        alpr = mx_alpr
+    elif country == 'sg':
+        alpr = sg_alpr
 
-    if not alpr.is_loaded():
+    if alpr is None or not alpr.is_loaded():
         return []
 
     alpr.set_top_n(top_n)
-    alpr.set_default_region(default_region)
-    alpr.set_detect_region(detect_region)
+    # alpr.set_default_region(default_region)
+    # alpr.set_detect_region(detect_region)
 
     jpeg_bytes = open(plate_path, 'rb').read()
     results = alpr.recognize_array(jpeg_bytes)
@@ -68,16 +76,17 @@ def get_plates_coordinates(plate_path):
     :param plate_path: 
     :return: [[(260, 256), (409, 229), (415, 264), (263, 291)]] 
     """
-    coordinates = alpr_plate_detection(plate_path, country='eu', top_n=1)
-    if len(coordinates) > 0:
-        return coordinates
-
-    coordinates = alpr_plate_detection(plate_path, country='us', top_n=1)
-    if len(coordinates) > 0:
-        return coordinates
+    countries = ['eu', 'us', 'au', 'gb', 'kr', 'mx', 'sg']
+    for country in countries:
+        coordinates = alpr_plate_detection(plate_path, country=country, top_n=1)
+        if len(coordinates) > 0:
+            print("plate coordinates found for '" + country + "'")
+            return coordinates
 
     coordinates = haar_plate_detection(plate_path)
     if len(coordinates) > 0:
+        print("plate coordinates found using haar detector")
         return coordinates
-
-    return []
+    else:
+        print("plate coordinates not found")
+        return []
