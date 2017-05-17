@@ -5,6 +5,7 @@
 
 import os
 import cv2
+import numpy as np
 from plate import detect, segment, noise, roi, binarization, morph
 
 
@@ -28,6 +29,7 @@ def process_plate(img_path, write_plate=True):
     # plate segmentation
     plates = segment.segment_plates(img, [points])
     gray = cv2.cvtColor(plates[0], cv2.COLOR_RGB2GRAY)
+    plate_gray = gray
     h, w = gray.shape
 
     # bilateral filter
@@ -39,10 +41,11 @@ def process_plate(img_path, write_plate=True):
 
     # binarization
     _, img_bin = cv2.threshold(filtered, 0, 255, cv2.THRESH_OTSU)
+    img_bin_initial = img_bin
     # img_bin = cv2.dilate(img_bin, cv2.getStructuringElement(cv2.MORPH_ERODE, (2, 2)), iterations=1)
 
     # clean contours & dilate
-    contours, selected = morph.clean_contours(img_bin)
+    contours, selected = morph.clean_contours(img_bin, border_radius=10)
     mask = segment.draw_segmentation_mask(w, h, contours, selected)
     # mask = cv2.dilate(mask, cv2.getStructuringElement(cv2.MORPH_ERODE, (2, 2)), iterations=1)
 
@@ -50,12 +53,15 @@ def process_plate(img_path, write_plate=True):
     final = segment.process_mask(filtered, mask)
 
     # contours #3
-    final2 = morph.clean_img_bin(final, 20, h * w * 0.5)
+    final2 = morph.clean_img_bin(final, 20, h * w * 0.5, border_radius=10)
     final2 = cv2.blur(final2, (2, 2), borderType=cv2.BORDER_REPLICATE)
 
     if write_plate:
+        combined1 = np.vstack([cv2.cvtColor(plates[0], cv2.COLOR_RGB2BGR), cv2.cvtColor(plate_gray, cv2.COLOR_GRAY2RGB)])
+        combined2 = np.vstack([cv2.cvtColor(img_bin_initial, cv2.COLOR_GRAY2RGB), cv2.cvtColor(final2, cv2.COLOR_GRAY2RGB)])
+        combined = np.vstack([combined1, combined2])
         plate_path = img_path + "-plate.png"
-        cv2.imwrite(plate_path, final2)
+        cv2.imwrite(plate_path, combined)
         print(plate_path, ' file written')
 
     return final2
